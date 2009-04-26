@@ -3,4 +3,14 @@ $LOAD_PATH.push File.join(File.dirname(__FILE__), "/../lib")
 require 'mastermind'
 
 game = Mastermind::Game.new(STDOUT)
+
 game.start
+game.secret
+STDIN.each_line do |line|
+  begin
+    game.guess(line.split)
+    break if game.over?
+  rescue RuntimeError=>e
+    STDOUT.puts e.message
+  end
+end
