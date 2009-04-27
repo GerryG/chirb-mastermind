@@ -37,7 +37,7 @@ Feature: code-breaker submits guess
     | r g y c | g w c w | ww   |
     | r r c c | r r r w | bb   |
     | r r c c | w c c c | bb   |
-    | r r c c | w r r r | bb   |
+    | r r c c | w r r r | bw   |
     | r r c c | c c c w | bw   |
 
   Scenarios: 1 color correct
