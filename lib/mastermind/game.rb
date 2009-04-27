@@ -61,25 +61,28 @@ module Mastermind
     def guess(guess)
       if Array===guess && guess.length == 4
         guess.each do |g|
-          raise "Bad guess letter(#{g})" unless @symbols.include?(g)
         end
         b=''; w=''
         hash = @hash.dup
         @guesses += 1
         @messenger.puts "Guess number #{@guesses}"
+        wguess = []
         for i in 0..3
           g = guess[i]
-          next unless hg = hash[g]
-          if hg > 0 && g == @secret[i]
-            guess[i] = nil
-            hash[g] = hg-1
-            b += 'b'
+          if hg = hash[g]
+            if hg > 0 && g == @secret[i]
+              hash[g] = hg-1
+              b += 'b'
+            else
+              wguess << g
+            end
+          elsif !@symbols.include?(g)
+            raise "Bad guess letter(#{g})"
           end
         end
-        guess.each do |g|
-          next unless g && (hg = hash[g])
-          if hg > 0
-            hash[g] = hg-1
+        wguess.each do |g|
+          if (hg = hash[g]) > 0
+            hash[g] -= 1
             w += 'w'
           end
         end
