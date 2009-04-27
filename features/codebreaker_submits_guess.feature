@@ -22,6 +22,13 @@ Feature: code-breaker submits guess
     | r g y c | r g c y | bbww |
     | r g y c | y r g c | bwww |
     | r g y c | c r g y | wwww |
+    | r r c c | r r c c | bbbb |
+    | c r c c | r c c c | bbww |
+    | r c c y | r c y c | bbww |
+    | r r c c | r c r c | bbww |
+    | r r c c | c r r c | bbww |
+    | r r c c | r c c r | bbww |
+    | r r c c | c c r r | wwww |
 
   Scenarios: 3 colors correct
     | code    | guess   | mark |
