@@ -7,8 +7,13 @@ end
 
 Given /^the secret code is (. . . .)$/ do |code|
   @messenger = StringIO.new
-  @game = Mastermind::Game.new(@messenger)
+  symbols = @symbols || 'bcgrwy'
+  @game = Mastermind::Game.new(@messenger, symbols)
   @game.start(code.split)
+end
+
+Given /^the symbol set is (\w+)$/ do |symbols|
+  @symbols = symbols
 end
 
 When /^I guess (. . . .)$/ do |code|
