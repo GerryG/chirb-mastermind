@@ -2,8 +2,83 @@
 $LOAD_PATH.push File.join(File.dirname(__FILE__), "/../lib")
 require 'mastermind'
 
-game = Mastermind::Game.new(STDOUT)
+# == Synopsis
+#
+# mastermind: plays the game
+#
+# == Usage
+#
+# mastermind [OPTION]
+#
+# -h, --help:
+#    show help
+#
+# --symbols chars, -s chars:
+#    The symbols set is 'chars'
+#
+# --secret, -C [code]:
+#    greet user by name, if name not supplied default is John
+#
+# --debug, -D:
+#    When true tell us the code when the game starts
+#
 
-game.start
-#game.secret
+require 'getoptlong'
+#require 'rdoc/usage'
+
+opts = GetoptLong.new(
+  [ '--help', '-h', GetoptLong::NO_ARGUMENT ],
+  [ '--symbols', '-s', GetoptLong::OPTIONAL_ARGUMENT ],
+  [ '--secret', '-C',  GetoptLong::OPTIONAL_ARGUMENT ],
+  [ '--debug', '-d',  GetoptLong::NO_ARGUMENT ],
+  [ '--quiet', '-q',  GetoptLong::NO_ARGUMENT ]
+)
+
+symbols = '123456'
+secret = nil
+debug = false
+quiet = false
+opts.each do |opt, arg|
+  case opt
+    when '--help'
+      #RDoc::usage
+      print <<"USAGE"
+
+ mastermind [OPTION]
+
+ -h, --help:
+    show help
+
+ --symbols chars, -s chars:
+    The symbols set is 'chars'
+
+ --secret, -C [code]:
+    greet user by name, if name not supplied default is John
+
+ --debug, -D:
+    When true tell us the code when the game starts
+
+USAGE
+      #exit 0
+    when '--debug'
+      debug = true
+    when '--quiet'
+      quiet = true
+    when '--symbols'
+      symbols = arg
+    when '--secret'
+      secret = arg
+  end
+end
+
+if ARGV.length != 0
+  puts "Extra arguments (try --help)"
+  exit 0
+end
+
+game = Mastermind::Game.new(STDOUT, symbols)
+symbols = 'bcgrwy' if symbols == ''
+STDOUT.puts "Symbol set is '#{symbols}'" unless quiet
+game.start(secret)
+game.secret if debug
 game.play

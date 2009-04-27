@@ -1,8 +1,9 @@
 module Mastermind
   class Game
-    def initialize(messenger, size=4, symbols='bcgrwy', allowdups=true)
+    def initialize(messenger, symbols='bcgrwy', size=4, allowdups=true)
       @messenger = messenger
       @size = size
+      symbols='bcgrwy' unless symbols && symbols != ''
       @symbols=String(symbols)
       @allowdups=allowdups
     end
@@ -34,11 +35,11 @@ module Mastermind
       end
     end
 
-    def play(input=STDIN)
+    def play(input=STDIN,pattern='')
       @input=input
       input.each_line do |line|
         begin
-          guess(line.split)
+          guess(line.chomp.split(pattern))
           break if over?
         rescue RuntimeError=>e
           @messenger.puts e.message
