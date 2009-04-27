@@ -35,8 +35,16 @@ Feature: code-breaker submits guess
     | r g y c | w g w c | bb   |
     | r g y c | w r w c | bw   |
     | r g y c | g w c w | ww   |
+    | r r c c | r r r w | bb   |
+    | r r c c | w c c c | bb   |
+    | r r c c | w r r r | bb   |
+    | r r c c | c c c w | bw   |
 
   Scenarios: 1 color correct
     | code    | guess   | mark |
     | r g y c | r w w w | b    |
+    | r r c c | w y c w | b    |
     | r g y c | w w r w | w    |
+    | r r c c | w c y w | w    |
+    | r r c c | w y r w | w    |
+    | r r c c | w c y w | w    |
