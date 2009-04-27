@@ -1,42 +1,57 @@
 module Mastermind
   class Game
-    def initialize(messenger)
+    def initialize(messenger, size=4, symbols='bcgrwy', allowdups=true)
       @messenger = messenger
+      @size = size
+      @symbols=String(symbols)
+      @allowdups=allowdups
     end
     
-    def start(secret_code=nil, symbols='cgrwy', allowdups=true)
-      code_length = 4
-      if !secret_code || Integer===secret_code
-        code_length = secret_code if secret_code
-        secret_code = []
-        code_length.times do
-          secret_code << symbols[rand(symbols.length)].chr
-        end
-      end
+    def start(secret_code=nil)
       @messenger.puts "Welcome to Mastermind!"
       @messenger.puts "Enter guess:"
-      if Array===secret_code && secret_code.length == 4
-        if @mark && @mark != 'bbbb'
-          raise "Game already in progress"
+      unless secret_code
+        secret_code = []
+        @size.times do
+          secret_code << @symbols[rand(@symbols.length)].chr
         end
+      end
+      if Array===secret_code && secret_code.length == @size
+        raise "Game already in progress" if @mark && !over?
         @secret = secret_code
         @guesses = 0
         @hash = {}
         #maxchar = 'f' #'a'.succ(symbols)
         secret_code.each do |s|
-          raise "Code element range #{s}" if s.length != 1 #||
-                                             #s < 'a' || s > maxchar
+          raise "Code element range #{s}" unless s.length == 1 &&
+                                                 @symbols.include?(s)
           was = @hash[s] || 0
-          raise "Duplicate code element #{s}" if !allowdups && was 
+          raise "Duplicate code element #{s}" if !@allowdups && was 
           @hash[s] = was+1
         end
       else
          raise "Bad code #{secret_code.to_s}"
       end
     end
-    
+
+    def play(input=STDIN)
+      @input=input
+      input.each_line do |line|
+        begin
+          guess(line.split)
+          break if over?
+        rescue RuntimeError=>e
+          @messenger.puts e.message
+        end
+      end
+    end
+
+    def reset
+      @mark=nil
+    end
+
     def over?
-      @mark == 'bbbb'
+      @mark && @mark == 'bbbb'
     end
 
     def secret
@@ -45,6 +60,9 @@ module Mastermind
 
     def guess(guess)
       if Array===guess && guess.length == 4
+        guess.each do |g|
+          raise "Bad guess letter(#{g})" unless @symbols.include?(g)
+        end
         b=''; w=''
         hash = @hash.dup
         @guesses += 1
