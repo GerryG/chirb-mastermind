@@ -22,7 +22,6 @@ module Mastermind
         @secret = secret_code
         @guesses = 0
         @hash = {}
-        #maxchar = 'f' #'a'.succ(symbols)
         secret_code.each do |s|
           raise "Code element range #{s}" unless s.length == 1 &&
                                                  @symbols.include?(s)

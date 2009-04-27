@@ -10,12 +10,12 @@ module Mastermind
 
       it "should send a welcome message" do
         @messenger.should_receive(:puts).with("Welcome to Mastermind!")
-        @game.start(%w[a b c d])
+        @game.start(%w[c y g b])
       end
 
       it "should prompt for the first guess" do
         @messenger.should_receive(:puts).with("Enter guess:")
-        @game.start(%w[a b c d])
+        @game.start(%w[c y g b])
       end
     end
   end
