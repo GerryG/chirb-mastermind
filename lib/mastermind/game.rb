@@ -69,10 +69,18 @@ module Mastermind
         @messenger.puts "Guess number #{@guesses}"
         for i in 0..3
           g = guess[i]
-          hg = hash[g] || 0
+          next unless hg = hash[g]
+          if hg > 0 && g == @secret[i]
+            guess[i] = nil
+            hash[g] = hg-1
+            b += 'b'
+          end
+        end
+        guess.each do |g|
+          next unless g && (hg = hash[g])
           if hg > 0
-            hash[g] -= 1
-            g == @secret[i] ?  b += 'b' : w += 'w'
+            hash[g] = hg-1
+            w += 'w'
           end
         end
         @mark = b+w
